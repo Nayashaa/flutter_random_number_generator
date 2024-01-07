@@ -17,14 +17,16 @@ class GeneratorView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('🔥 Random Number Generator 🔥')),
-      body: const Stack(
+      body: Stack(
         children: [
           Background(),
           Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 RandomNumberVisual(),
                 ActionButton(),
+                RandomColorWidget(),
               ],
             ),
           )
@@ -51,11 +53,15 @@ class ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        TextButton(onPressed: () {}, child: Text("Next Number")),
-        TextButton(onPressed: () {}, child: Text("Save"))
-      ],
+    return Container(
+      // color: Colors.blue,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TextButton(onPressed: () {}, child: Text("Next Number")),
+          TextButton(onPressed: () {}, child: Text("Save"))
+        ],
+      ),
     );
   }
 }
