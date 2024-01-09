@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_random_number_generator/timer/bloc/number_generator_bloc.dart';
+
 class GeneratorPage extends StatelessWidget {
   const GeneratorPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const GeneratorView();
+    return BlocProvider(
+      create: (context) => NumberGeneratorBloc(),
+      child: GeneratorView(),
+    );
   }
 }
 
@@ -42,7 +48,7 @@ class RandomNumberVisual extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      "0",
+      context.select((NumberGeneratorBloc bloc) => bloc.state.randomNumber.toString()),
       style: Theme.of(context).textTheme.displayLarge,
     );
   }
@@ -58,8 +64,8 @@ class ActionButton extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          TextButton(onPressed: () {}, child: Text("Next Number")),
-          TextButton(onPressed: () {}, child: Text("Save"))
+          TextButton(onPressed: () => context.read<NumberGeneratorBloc>().add(StartRandomNumber()), child: Text("Start")),
+          TextButton(onPressed: () => context.read<NumberGeneratorBloc>().add(PauseRandomNumber()), child: Text("Stop"))
         ],
       ),
     );
