@@ -9,22 +9,50 @@ part 'number_generator_event.dart';
 part 'number_generator_state.dart';
 
 class NumberGeneratorBloc extends Bloc<NumberGeneratorEvent, NumberGeneratorState> {
-  NumberGeneratorBloc() : super(NumberGeneratorInitial(randomNumber: 0)) {
-    on<StartRandomNumber>((_onStarted));
+  final _ticker;
+  StreamSubscription<int>? _tickerSubscription;
 
-    on<PauseRandomNumber>((_onStopped));
+  NumberGeneratorBloc() : super(NumberGeneratorInitial(randomNumber: 0)) {
+    on<StartRandomNumber>(_onStarted);
+    on<PauseRandomNumber>(_onStopped);
   }
-/////////////////////////////////////////////
 
   void _onStarted(StartRandomNumber event, Emitter<NumberGeneratorState> emit) async {
-    print("Started");
-
     await for (final number in generateRandomNumbers()) {
       emit(NumberGeneratorInitial(randomNumber: number)); // Emit generated number in state
       print("Generated number: $number");
     }
   }
+
+  void _onStopped(PauseRandomNumber event, Emitter<NumberGeneratorState> emit) {
+    _tickerSubscription?.cancel();
+    print("stopped");
+  }
 }
+
+
+// class NumberGeneratorBloc extends Bloc<NumberGeneratorEvent, NumberGeneratorState> {
+//   StreamSubscription<int>? _tickerSubscription;
+//   NumberGeneratorBloc() : super(NumberGeneratorInitial(randomNumber: 0)) {
+//     on<StartRandomNumber>((_onStarted));
+
+//     on<PauseRandomNumber>((_onStopped));
+//   }
+// /////////////////////////////////////////////
+
+//   void _onStarted(StartRandomNumber event, Emitter<NumberGeneratorState> emit) async {
+//     _tickerSubscription?.cancel();
+//     await for (final number in generateRandomNumbers()) {
+//       emit(NumberGeneratorInitial(randomNumber: number)); // Emit generated number in state
+//       print("Generated number: $number");
+//     }
+//   }
+// }
+
+// void _onStopped(PauseRandomNumber event, Emitter<NumberGeneratorState> emit) {
+//   _tickerSubscription?.cancel();
+//   print("stopped");
+// }
 
 //   void _onStarted(StartRandomNumber event, Emitter<NumberGeneratorState> emit) async {
 //     final randomNumbersStream = generateRandomNumbers();
@@ -58,9 +86,6 @@ class NumberGeneratorBloc extends Bloc<NumberGeneratorEvent, NumberGeneratorStat
 // }
 ////////////////////////////////////
 
-void _onStopped(PauseRandomNumber event, Emitter<NumberGeneratorState> emit) {
-  print("stopped");
-}
 
 
 
